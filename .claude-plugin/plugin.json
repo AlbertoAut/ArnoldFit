@@ -1,3 +1,9 @@
 {
-  "name": "ArnoldFit"
+  "name": "arnold-fit",
+  "version": "1.0.0",
+  "description": "Asistente para planificar rutinas de gimnasio y gestionar entrenamientos físicos.",
+  "author": {
+    "name": "Alberto"
+  },
+  "license": "MIT"
 }
