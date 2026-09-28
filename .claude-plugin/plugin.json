@@ -1,7 +1,7 @@
 {
   "name": "arnold-fit",
   "version": "1.0.0",
-  "description": "Asistente para planificar rutinas de gimnasio y gestionar entrenamientos físicos.",
+  "description": "CRM automatizado para gimnasios con integración de bot de WhatsApp para gestión de leads, seguimientos y cobranza.",
   "author": {
     "name": "Alberto"
   },
