@@ -4,3 +4,4 @@ ArnoldFit es un CRM integral diseñado para la administración de gimnasios, imp
 
 **Configuración y uso:**
 Para inicializar el sistema, es necesario vincular el entorno con la API de WhatsApp Cloud de Meta utilizando un Token de acceso y un App Secret. Adicionalmente, el CRM requiere la configuración de las credenciales de la base de datos en el archivo `.env` para sincronizar la información de los gimnasios. Una vez desplegado, el bot opera de manera continua y autónoma gestionando la comunicación de los clientes.
+
