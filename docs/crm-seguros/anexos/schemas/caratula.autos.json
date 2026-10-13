@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Carátula de póliza · Autos",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["aseguradora", "numero_poliza", "contratante", "vigencia_inicio", "vigencia_fin", "prima_total", "vehiculo", "campos_dudosos"],
+  "properties": {
+    "aseguradora": { "type": "string", "description": "Nombre comercial tal como aparece en el documento" },
+    "numero_poliza": { "type": "string" },
+    "numero_endoso": { "type": ["string", "null"] },
+    "numero_renovacion": { "type": ["integer", "null"] },
+    "producto_plan": { "type": ["string", "null"], "description": "Amplia, Amplia Plus, Limitada, RC" },
+    "contratante": {
+      "type": "object", "additionalProperties": false,
+      "required": ["nombre_completo"],
+      "properties": {
+        "nombre_completo": { "type": "string" },
+        "rfc": { "type": ["string", "null"] },
+        "curp": { "type": ["string", "null"] },
+        "domicilio": { "type": ["string", "null"] },
+        "codigo_postal": { "type": ["string", "null"] },
+        "telefono": { "type": ["string", "null"] },
+        "email": { "type": ["string", "null"] }
+      }
+    },
+    "asegurado": { "type": ["string", "null"], "description": "Si difiere del contratante" },
+    "fecha_emision": { "type": ["string", "null"], "description": "ISO 8601" },
+    "vigencia_inicio": { "type": "string", "description": "ISO 8601" },
+    "vigencia_fin": { "type": "string", "description": "ISO 8601" },
+    "moneda": { "type": "string", "enum": ["MXN", "USD", "UDI"] },
+    "prima_neta": { "type": ["number", "null"] },
+    "recargo_pago_fraccionado": { "type": ["number", "null"] },
+    "derecho_poliza": { "type": ["number", "null"], "description": "Gastos de expedición" },
+    "iva": { "type": ["number", "null"] },
+    "prima_total": { "type": "number" },
+    "forma_pago": { "type": ["string", "null"], "enum": ["ANUAL", "SEMESTRAL", "TRIMESTRAL", "MENSUAL", null] },
+    "conducto_cobro": { "type": ["string", "null"], "enum": ["AGENTE", "CARGO_TARJETA", "DOMICILIACION", "VENTANILLA", "TRANSFERENCIA", null] },
+    "clave_agente": { "type": ["string", "null"] },
+    "nombre_agente": { "type": ["string", "null"] },
+    "vehiculo": {
+      "type": "object", "additionalProperties": false,
+      "required": ["descripcion"],
+      "properties": {
+        "descripcion": { "type": "string" },
+        "marca": { "type": ["string", "null"] },
+        "submarca": { "type": ["string", "null"] },
+        "modelo_anio": { "type": ["integer", "null"] },
+        "serie_vin": { "type": ["string", "null"] },
+        "motor": { "type": ["string", "null"] },
+        "placas": { "type": ["string", "null"] },
+        "color": { "type": ["string", "null"] },
+        "uso": { "type": ["string", "null"] },
+        "conductor_habitual": { "type": ["string", "null"] },
+        "suma_asegurada_tipo": { "type": ["string", "null"], "description": "valor comercial, factura, convenido" }
+      }
+    },
+    "coberturas": {
+      "type": "array",
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["nombre"],
+        "properties": {
+          "nombre": { "type": "string" },
+          "suma_asegurada": { "type": ["string", "null"] },
+          "deducible": { "type": ["string", "null"] },
+          "prima": { "type": ["number", "null"] }
+        }
+      }
+    },
+    "campos_dudosos": {
+      "type": "array",
+      "description": "Nombres de campos cuyo valor fue difícil de leer o es ambiguo",
+      "items": { "type": "string" }
+    },
+    "evidencia": {
+      "type": "array",
+      "description": "Para campos críticos: texto literal y página donde se leyó",
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["campo", "texto", "pagina"],
+        "properties": {
+          "campo": { "type": "string" },
+          "texto": { "type": "string" },
+          "pagina": { "type": "integer" }
+        }
+      }
+    }
+  }
+}
