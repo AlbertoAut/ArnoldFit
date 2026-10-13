@@ -115,7 +115,9 @@ create table contactos (
   apellido_materno text,
   razon_social    text,                        -- persona moral
   nombre_completo text generated always as (
-    coalesce(razon_social, trim(concat_ws(' ', nombre, apellido_paterno, apellido_materno)))
+    coalesce(razon_social, nullif(regexp_replace(btrim(
+      coalesce(nombre,'') || ' ' || coalesce(apellido_paterno,'') || ' ' || coalesce(apellido_materno,'')
+    ), '\s+', ' ', 'g'), ''))
   ) stored,
   rfc             text,
   curp            text,
@@ -587,12 +589,17 @@ create table solicitudes_arco (
 -- ---------------------------------------------------------------------
 -- 10. RLS: una política por tabla, basada en tenant del JWT
 -- ---------------------------------------------------------------------
-create or replace function current_tenant_id() returns uuid language sql stable as $$
+-- SECURITY DEFINER es obligatorio: la función lee `perfiles`, que a su vez tiene
+-- RLS basada en esta misma función. Sin definer habría recursión infinita.
+create or replace function current_tenant_id() returns uuid
+language sql stable security definer set search_path = public as $$
   select nullif(coalesce(
     auth.jwt() -> 'app_metadata' ->> 'tenant_id',
     (select tenant_id::text from perfiles where id = auth.uid())
   ), '')::uuid
 $$;
+revoke all on function current_tenant_id() from public;
+grant execute on function current_tenant_id() to authenticated, service_role;
 
 do $$ declare t text; begin
   foreach t in array array[

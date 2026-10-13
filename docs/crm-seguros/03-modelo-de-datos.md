@@ -61,6 +61,13 @@ catálogos globales: aseguradoras, productos
 
 Se cargan las 6+ con las que trabaja la agente y las más comunes del mercado: Quálitas, GNP, AXA, HDI, MetLife, Seguros Monterrey New York Life, Mapfre, Chubb, Zurich, Allianz, Banorte, Inbursa, Atlas, SURA, Plan Seguro, Bupa, General de Seguros, ANA, El Potosí, Afirme, Sofimex, Aserta, Afianzadora Insurgentes. Cada una con sus dominios de correo (para WF-01) y teléfonos de cabina/siniestros (para el asistente).
 
+## Validación realizada
+
+El esquema se ejecutó completo en PostgreSQL 16 (con stubs del esquema `auth` de Supabase y de pgvector) y se probó con datos de dos tenants: columnas generadas, fecha límite de pago (vencimiento + 30 días), vistas `v_renovaciones_proximas` y `v_cobranza`, triggers de auditoría y aislamiento RLS (un usuario del tenant B no ve contactos, pólizas ni recibos del tenant A). Dos lecciones que quedaron incorporadas:
+
+1. Las columnas generadas solo admiten expresiones inmutables; `concat_ws` no lo es, por eso `nombre_completo` usa concatenación con `||` y `regexp_replace`.
+2. `current_tenant_id()` debe ser `security definer`: lee `perfiles`, cuya política RLS invoca a la misma función; sin definer se produce recursión infinita ("stack depth limit exceeded"). Es el error más común al implementar multi-tenant en Supabase y conviene cubrirlo con un test automatizado en CI.
+
 ## Migraciones
 
 Supabase CLI (`supabase migration new`, `supabase db push`). El `schema.sql` del anexo es la migración `0001_inicial`. Toda modificación posterior es una migración nueva; nunca se edita la BD a mano en producción.
